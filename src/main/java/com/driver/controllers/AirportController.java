@@ -45,7 +45,7 @@ public class AirportController {
         //Find the duration by finding the shortest flight that connects these 2 cities directly
         //If there is no direct flight between 2 cities return -1.
 
-       return 0;
+       return airportService.getShortestDurationOfPossibleBetweenTwoCities(fromCity, toCity);
     }
 
     @GetMapping("/get-number-of-people-on-airport-on/{date}")
@@ -104,7 +104,8 @@ public class AirportController {
     public String addFlight(@RequestBody Flight flight){
 
         //Return a "SUCCESS" message string after adding a flight.
-       return null;
+        airportService.addFlight(flight);
+       return "SUCCESS";
     }
 
 
