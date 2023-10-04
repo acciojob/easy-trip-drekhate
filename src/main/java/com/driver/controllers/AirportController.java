@@ -1,10 +1,12 @@
 package com.driver.controllers;
 
 
+import com.driver.Service.AirportService;
 import com.driver.model.Airport;
 import com.driver.model.City;
 import com.driver.model.Flight;
 import com.driver.model.Passenger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -16,12 +18,15 @@ import java.util.Objects;
 
 @RestController
 public class AirportController {
+//    @Autowired
+//    AirportService airportService;
+    AirportService airportService = new AirportService();
     @PostMapping("/add_airport")
     public String addAirport(@RequestBody Airport airport){
 
         //Simply add airport details to your database
         //Return a String message "SUCCESS"
-
+        airportService.addAirport(airport);
         return "SUCCESS";
     }
 
@@ -31,7 +36,7 @@ public class AirportController {
         //Largest airport is in terms of terminals. 3 terminal airport is larger than 2 terminal airport
         //Incase of a tie return the Lexicographically smallest airportName
 
-       return null;
+       return airportService.getLargestAirportName();
     }
 
     @GetMapping("/get-shortest-time-travel-between-cities")
