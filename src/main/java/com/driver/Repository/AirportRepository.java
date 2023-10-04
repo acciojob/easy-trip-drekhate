@@ -4,6 +4,7 @@ import com.driver.model.Airport;
 import com.driver.model.City;
 import com.driver.model.Flight;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,5 +52,17 @@ public class AirportRepository {
 
     public void addFlight(Flight flight) {
         flightDB.put(flight.getFlightId(), flight);
+    }
+
+    public int getNumberOfPeopleOn(Date date, String airportName) {
+        int count = 0;
+        Airport airportNameObj = airPortDB.get(airportName);
+        City airportNameCity = airportNameObj.getCity();
+        for (Flight value: flightDB.values()) {
+            if(date.equals(value.getFlightDate()) && (airportNameCity.equals(value.getFromCity()) || airportNameCity.equals(value.getToCity()))) {
+                count ++;
+            }
+        }
+        return count;
     }
 }

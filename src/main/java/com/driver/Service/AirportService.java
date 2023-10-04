@@ -6,6 +6,8 @@ import com.driver.model.City;
 import com.driver.model.Flight;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
+
 public class AirportService {
 //    @Autowired
 //    AirportRepository airportRepository;
@@ -24,5 +26,9 @@ public class AirportService {
 
     public void addFlight(Flight flight) {
         airportRepository.addFlight(flight);
+    }
+
+    public int getNumberOfPeopleOn(Date date, String airportName) {
+        return airportRepository.getNumberOfPeopleOn(date, airportName);
     }
 }
