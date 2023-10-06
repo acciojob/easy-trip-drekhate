@@ -98,8 +98,9 @@ public class TripService {
             return "FAILURE";
         }
 
-//         whatever flight book by passangerId in that flight, maching flightId is present return FAILURE
-        for(Flight flight:bookedFlightByPassanger.getOrDefault(passangerId,new ArrayList<>())) {
+//        Also if the passenger has already booked a flight then also return "FAILURE".
+//        Whatever flight book by passangerId in that flight, maching flightId is present return FAILURE
+        for(Flight flight:bookedFlightByPassanger.getOrDefault(passangerId, new ArrayList<>())) {
             if(flightId.equals(flight.getFlightId())) {
                 return "FAILURE";
             }
@@ -107,12 +108,12 @@ public class TripService {
 //        If the numberOfPassengers who have booked the flight is greater than : maxCapacity, in that case :
 //        return a String "FAILURE"
         Map<Integer, List<Passenger>> flightPassangerMap = tripRepository.getFlightPassangerMap();
-        List<Passenger> passengerList = flightPassangerMap.getOrDefault(flightId,new ArrayList<>());
+        List<Passenger> passengerList = flightPassangerMap.getOrDefault(flightId, new ArrayList<>());
         if(flightMap.get(flightId).getMaxCapacity() < passengerList.size()) {
             return "FAILURE";
         }
 
-        List<Flight> flights = bookedFlightByPassanger.getOrDefault(passangerId,new ArrayList<>());
+        List<Flight> flights = bookedFlightByPassanger.getOrDefault(passangerId, new ArrayList<>());
         flights.add(flightMap.get(flightId));
         bookedFlightByPassanger.put(passangerId,flights);
         passengerList.add(passengerMap.get(passangerId));
@@ -120,33 +121,43 @@ public class TripService {
         return "SUCCESS";
     }
 
-    public String cancelATicket(Integer flightId,Integer passengerId)
+    public String cancelATicket(Integer flightId, Integer passengerId)
     {
         //If the passenger has not booked a ticket for that flight or the flightId is invalid or in any other failure case
         // then return a "FAILURE" message
         // Otherwise return a "SUCCESS" message
         // and also cancel the ticket that passenger had booked earlier on the given flightId
-        Map<Integer, Flight>flightMap=tripRepository.getFlightMap();
-        //If flight is Invalid..
-        if(flightMap.containsKey(flightId)==false)return "FAILURE";
+        Map<Integer, Flight> flightMap = tripRepository.getFlightMap();
+        //If flightID is Invalid..
+        if(!flightMap.containsKey(flightId)) {
+            return "FAILURE";
+        }
 
-        Map<Integer, Passenger>passengerMap=tripRepository.getPassengerMap();
-        if(passengerMap.containsKey(passengerId)==false)return "FAILURE";
+        Map<Integer, Passenger> passengerMap = tripRepository.getPassengerMap();
+//        If passengerId is invalid
+        if(!passengerMap.containsKey(passengerId)) {
+            return "FAILURE";
+        }
 
-        Map<Integer,List<Flight>>bookedFlightByPassanger=tripRepository.getBookedFlightByPassanger();
-        if(!bookedFlightByPassanger.containsKey(passengerId))return "FAILURE";
+        Map<Integer,List<Flight>> bookedFlightByPassanger = tripRepository.getBookedFlightByPassanger();
+//        flight not book by passengerId
+        if(!bookedFlightByPassanger.containsKey(passengerId)) {
+            return "FAILURE";
+        }
 
-        //here means It was present... here we go to delete it..
-        List<Flight>flightList=bookedFlightByPassanger.get(passengerId);
-        if(flightList.contains(flightMap.get(flightId))==false)return "FAILURE";
+//        Here means It was present... here we go to delete it..
+        List<Flight> flightList = bookedFlightByPassanger.get(passengerId);
+        if(!flightList.contains(flightMap.get(flightId))) {
+            return "FAILURE";
+        }
         flightList.remove(flightMap.get(flightId));
-        if(flightList.size()==0)bookedFlightByPassanger.remove(passengerId);
+        if(flightList.size() == 0) {
+            bookedFlightByPassanger.remove(passengerId);
+        }
 
-        Map<Integer, List<Passenger>>flightPassangerMap=tripRepository.getFlightPassangerMap();
-
-        List<Passenger>passengerList=flightPassangerMap.get(flightId);
+        Map<Integer, List<Passenger>> flightPassangerMap = tripRepository.getFlightPassangerMap();
+        List<Passenger> passengerList = flightPassangerMap.get(flightId);
         passengerList.remove(passengerMap.get(passengerId));
-
         return "SUCCESS";
     }
 
