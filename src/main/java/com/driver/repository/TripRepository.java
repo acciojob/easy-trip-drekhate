@@ -11,15 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 public class TripRepository {
-    private Map<String, Airport> airportMap=new HashMap<>();
-    private Map<Integer, Flight>flightMap=new HashMap<>();
+    private Map<String, Airport> airportMap = new HashMap<>();
+    private Map<Integer, Flight> flightMap = new HashMap<>();
 
-    private Map<Integer, Passenger>passengerMap=new HashMap<>();
+    private Map<Integer, Passenger> passengerMap = new HashMap<>();
 
-    private Map<Integer, List<Passenger>>flightPassangerMap=new HashMap<>();
+    private Map<Integer, List<Passenger>> flightPassangerMap = new HashMap<>();
 
-
-    private Map<Integer,List<Flight>>bookedFlightByPassanger=new HashMap<>();
+    private Map<Integer,List<Flight>> bookedFlightByPassanger = new HashMap<>();
 
     public Map<Integer, List<Flight>> getBookedFlightByPassanger()
     {

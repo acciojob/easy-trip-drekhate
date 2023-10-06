@@ -12,7 +12,7 @@ import java.util.Date;
 
 @RestController
 public class AirportController {
-    private TripService tripService=new TripService();
+    private TripService tripService = new TripService();
     @PostMapping("/add_airport")
     public String addAirport(@RequestBody Airport airport){
 
@@ -41,7 +41,7 @@ public class AirportController {
     }
 
     @PostMapping("/book-a-ticket")
-    public String bookATicket(@RequestParam("flightId")Integer flightId,@RequestParam("passengerId")Integer passengerId)
+    public String bookATicket(@RequestParam("flightId") Integer flightId, @RequestParam("passengerId") Integer passengerId)
     {
 
         //If the numberOfPassengers who have booked the flight is greater than : maxCapacity, in that case :

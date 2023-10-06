@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 public class TripService {
-    private TripRepository tripRepository=new TripRepository();
+    private TripRepository tripRepository = new TripRepository();
 
     public void addAirPort(Airport airport)
     {
-        Map<String,Airport> map=tripRepository.getAirportMap();
+        Map<String,Airport> map = tripRepository.getAirportMap();
         map.put(airport.getAirportName(),airport);
     }
 
@@ -81,36 +81,42 @@ public class TripService {
         return "SUCCESS";
     }
 
-    public  String bookATicket(Integer flightId,Integer passangerId)
+    public  String bookATicket(Integer flightId, Integer passangerId)
     {
 
         //If the numberOfPassengers who have booked the flight is greater than : maxCapacity, in that case :
         //return a String "FAILURE"
         //Also if the passenger has already booked a flight then also return "FAILURE".
         //else if you are able to book a ticket then return "SUCCESS"
-        Map<Integer,List<Flight>>bookedFlightByPassanger=tripRepository.getBookedFlightByPassanger();
-        Map<Integer, Passenger>passengerMap=tripRepository.getPassengerMap();
-        Map<Integer, Flight>flightMap=tripRepository.getFlightMap();
+        Map<Integer,List<Flight>> bookedFlightByPassanger = tripRepository.getBookedFlightByPassanger();
+        Map<Integer, Passenger> passengerMap = tripRepository.getPassengerMap();
+        Map<Integer, Flight> flightMap = tripRepository.getFlightMap();
 
-        if(!flightMap.containsKey(flightId) || !passengerMap.containsKey(passangerId))return "FAILURE";
-
-        //It is present in the booked Flight map..
-        for(Flight flight:bookedFlightByPassanger.getOrDefault(passangerId,new ArrayList<>()))
-        {
-            if(flightId.equals(flight.getFlightId()))return "FAILURE";
+//        FAILURE Condition Check
+//        check flightID and passangerId
+        if(!flightMap.containsKey(flightId) || !passengerMap.containsKey(passangerId)) {
+            return "FAILURE";
         }
-        Map<Integer, List<Passenger>>flightPassangerMap=tripRepository.getFlightPassangerMap();
-        List<Passenger>passengerList=flightPassangerMap.getOrDefault(flightId,new ArrayList<>());
-        if(flightMap.get(flightId).getMaxCapacity()<=passengerList.size())return "FAILURE";
 
-        List<Flight> flights=bookedFlightByPassanger.getOrDefault(passangerId,new ArrayList<>());
+//         whatever flight book by passangerId in that flight, maching flightId is present return FAILURE
+        for(Flight flight:bookedFlightByPassanger.getOrDefault(passangerId,new ArrayList<>())) {
+            if(flightId.equals(flight.getFlightId())) {
+                return "FAILURE";
+            }
+        }
+//        If the numberOfPassengers who have booked the flight is greater than : maxCapacity, in that case :
+//        return a String "FAILURE"
+        Map<Integer, List<Passenger>> flightPassangerMap = tripRepository.getFlightPassangerMap();
+        List<Passenger> passengerList = flightPassangerMap.getOrDefault(flightId,new ArrayList<>());
+        if(flightMap.get(flightId).getMaxCapacity() < passengerList.size()) {
+            return "FAILURE";
+        }
+
+        List<Flight> flights = bookedFlightByPassanger.getOrDefault(passangerId,new ArrayList<>());
         flights.add(flightMap.get(flightId));
         bookedFlightByPassanger.put(passangerId,flights);
-
-
         passengerList.add(passengerMap.get(passangerId));
         flightPassangerMap.put(flightId,passengerList);
-
         return "SUCCESS";
     }
 
